@@ -1,0 +1,56 @@
+{
+  "gql": {
+    "endpoint": "http://localhost:8080/v1/graphql",
+    "secret": "myadminsecretkey"
+  },
+  "login": {
+    "challenge": {
+      "timeToLiveMinutes": 5
+    }
+  },
+  "jwt": {
+    "keysPath": "/home/sebastian/vsc-workspace/hashed-private-server/jwt-keys/test",
+    "passphrase": "test passphrase",
+    "tokenExpirationTimeMins": 60
+  },
+  "swagger": {
+    "routePrefix": "/documentation",
+    "swagger": {
+      "info": {
+        "title": "Hashed Privacy",
+        "description": "Hashed Privacy",
+        "version": "0.1.0"
+      },
+      "externalDocs": {
+        "url": "https://swagger.io",
+        "description": "Find more info here"
+      },
+      "consumes": [
+        "application/json"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "tags": [
+        {
+          "name": "login",
+          "description": "Login related services"
+        }
+      ]
+    },
+    "uiConfig": {
+      "docExpansion": "full",
+      "deepLinking": false
+    },
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    },
+    "exposeRoute": true
+  }
+}

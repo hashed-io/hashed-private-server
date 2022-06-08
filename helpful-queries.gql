@@ -1,0 +1,49 @@
+mutation{
+  generate_login_challenge(req:{
+    address:"5Dnk6vQhAVDY9ysZr8jrqWJENDWYHaF3zorFA4dr9Mtbei77"
+  }){
+    message
+  }
+}
+
+
+mutation{
+  login(req:{
+    address:"5Dnk6vQhAVDY9ysZr8jrqWJENDWYHaF3zorFA4dr9Mtbei77",
+    signature:"0x5a1aa596fd20d5eddfd21fb4be11858a674bfda4f4fe7a7727137ca6b49387240c60268daba124723b2e71b83cabc4844b709c71b204433a94ecac2b96112e88"
+  }){
+    refresh_token
+    token
+    user{
+      address
+      id
+      public_key
+      security_data
+    }
+  }
+}
+
+
+mutation{
+  generate_login_challenge(req:{
+    address:"5HT1nugEKpbnszsucUbZjMVXWm2AZGAetSYU13kHseWavCcq"
+  }){
+    message
+  }
+}
+
+mutation{
+  login(req:{
+    address:"5HT1nugEKpbnszsucUbZjMVXWm2AZGAetSYU13kHseWavCcq",
+    signature:"0x7ed3100c4d3e66a90e07adb78e115f784ab1c1c9a01ac12507c0b9ff4cd6483ed09c887feab9384dbf32c70cee6e814989b01cb3d330a256f1c8d9f4ca32a782"
+  }){
+    refresh_token
+    token
+    user{
+      address
+      id
+      public_key
+      security_data
+    }
+  }
+}
