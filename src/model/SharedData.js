@@ -14,23 +14,8 @@ const INSERT_SHARED_DATA = gql`
     }) {      
         id
         from_user_id
-        to_user{
-          id
-          address
-        }
-        original_owned_data{
-          id
-          type
-          name
-          description
-          cid
-          original_cid
-          owner_user_id
-          started_at
-          ended_at
-          is_deleted
-          
-        }
+        to_user_id
+        original_owned_data_id
         name
         description
         cid

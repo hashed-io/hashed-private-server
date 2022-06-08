@@ -38,7 +38,7 @@ const _ownedDataSchema = (props = {}, required = []) => ({
     cid: cidSchema,
     original_cid: cidSchema,
     started_at: timestampSchema,
-    ended_at: timestampSchema,
+    ended_at: nullableTimestampSchema,
     is_deleted: { type: 'boolean' },
     ...props
   },

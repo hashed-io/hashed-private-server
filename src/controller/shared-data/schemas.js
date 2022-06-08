@@ -4,9 +4,7 @@ const {
   cidSchema,
   descriptionSchema,
   timestampSchema,
-  responseAffectedRows,
-  addressSchema,
-  ownedDataSchema
+  responseAffectedRows
 } = require('../../schemas')
 const tags = ['shared-data']
 
@@ -24,19 +22,12 @@ const shareDataSchema = {
   response: {
     200: {
       type: 'object',
-      required: ['id', 'from_user_id', 'to_user', 'original_owned_data', 'name', 'description', 'cid', 'shared_at'],
+      required: ['id', 'from_user_id', 'to_user_id', 'original_owned_data_id', 'name', 'description', 'cid', 'shared_at'],
       properties: {
         id: { type: 'integer' },
         from_user_id: uuidTypeSchema,
-        to_user: {
-          type: 'object',
-          required: ['id', 'address'],
-          properties: {
-            id: uuidTypeSchema,
-            address: addressSchema
-          }
-        },
-        original_owned_data: ownedDataSchema,
+        to_user_id: uuidTypeSchema,
+        original_owned_data_id: { type: 'integer' },
         name: nameSchema,
         description: descriptionSchema,
         cid: cidSchema,

@@ -30,8 +30,8 @@ async function authenticate (req) {
         }
       }
     }
-    throw new Unauthorized('JWT token not found')
   }
+  throw new Unauthorized('JWT token not found')
 }
 
 function verifyJWT (instance, options, done) {

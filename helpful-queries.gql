@@ -1,16 +1,24 @@
-mutation{
+mutation generate_login_challenge($address: String!){
   generate_login_challenge(req:{
-    address:"5Dnk6vQhAVDY9ysZr8jrqWJENDWYHaF3zorFA4dr9Mtbei77"
+    address: $address
   }){
     message
   }
 }
 
+{
+  "address": "5Dnk6vQhAVDY9ysZr8jrqWJENDWYHaF3zorFA4dr9Mtbei77"
+}
 
-mutation{
+{
+  "address": "5HT1nugEKpbnszsucUbZjMVXWm2AZGAetSYU13kHseWavCcq"
+}
+
+
+mutation login($address: String!, $signature: String!){
   login(req:{
-    address:"5Dnk6vQhAVDY9ysZr8jrqWJENDWYHaF3zorFA4dr9Mtbei77",
-    signature:"0x5a1aa596fd20d5eddfd21fb4be11858a674bfda4f4fe7a7727137ca6b49387240c60268daba124723b2e71b83cabc4844b709c71b204433a94ecac2b96112e88"
+    address: $address,
+    signature: $signature
   }){
     refresh_token
     token
@@ -23,27 +31,114 @@ mutation{
   }
 }
 
+{
+  "address":"5Dnk6vQhAVDY9ysZr8jrqWJENDWYHaF3zorFA4dr9Mtbei77",
+  "signature":"0x5a1aa596fd20d5eddfd21fb4be11858a674bfda4f4fe7a7727137ca6b49387240c60268daba124723b2e71b83cabc4844b709c71b204433a94ecac2b96112e88"
+}
 
-mutation{
-  generate_login_challenge(req:{
-    address:"5HT1nugEKpbnszsucUbZjMVXWm2AZGAetSYU13kHseWavCcq"
+{
+  "address":"5HT1nugEKpbnszsucUbZjMVXWm2AZGAetSYU13kHseWavCcq",
+  "signature":"0x7ed3100c4d3e66a90e07adb78e115f784ab1c1c9a01ac12507c0b9ff4cd6483ed09c887feab9384dbf32c70cee6e814989b01cb3d330a256f1c8d9f4ca32a782"
+}
+
+
+
+mutation upsert_owned_data($id: Int, $name: String!, $description: String!, $cid: String!, $type: String! ){
+  upsert_owned_data(req:{
+    id: $id,
+    name: $name,
+    description: $description,
+    cid: $cid,
+    type: $type
   }){
-    message
+    id
+    name
+    description
+    cid
+    type
+    started_at
+    ended_at
+    is_deleted
   }
 }
 
-mutation{
-  login(req:{
-    address:"5HT1nugEKpbnszsucUbZjMVXWm2AZGAetSYU13kHseWavCcq",
-    signature:"0x7ed3100c4d3e66a90e07adb78e115f784ab1c1c9a01ac12507c0b9ff4cd6483ed09c887feab9384dbf32c70cee6e814989b01cb3d330a256f1c8d9f4ca32a782"
+{
+  "id": null,
+  "name": "name gql3",
+  "description": "desc gql3",
+  "cid": "cidcidcidcidcidcidcidcidcidcidcidcid gql3",
+  "type": "type gql1"
+}
+
+
+mutation soft_delete_owned_data($id: Int!){
+  soft_delete_owned_data(req:{
+    id: $id
   }){
-    refresh_token
-    token
-    user{
-      address
+    affected_rows
+  }
+}
+
+{
+  "id": 26
+}
+
+mutation share($toUserId: uuid!, $originalOwnedDataId: Int!, $cid: String!){
+  share(req:{
+    to_user_id: $toUserId,
+    original_owned_data_id:$originalOwnedDataId,
+    cid: $cid
+  }){
+    id
+    from_user{
       id
-      public_key
-      security_data
+      address
+    }
+    to_user{
+      id
+      address
+    }
+    name
+    description
+    cid
+    shared_at
+    original_owned_data{
+      id
+      type
     }
   }
+}
+
+{
+  "toUserId": "41baaac1-8d35-42da-91ab-02efd424d71f",
+  "originalOwnedDataId": 25,
+  "cid": "cidcidcidcidcidcidcidcidcidcidcidcid gql4"
+}
+
+
+mutation update_shared_data_metadata($id: Int!, $name: String!, $description: String!){
+  update_shared_data_metadata(req:{
+    id: $id,
+    name:$name,
+    description: $description
+  }){
+    affected_rows
+  }
+}
+
+{
+  "id": 19,
+  "name": "name gql4",
+  "description": "desc gql4"
+}
+
+
+mutation delete_shared_data($id: Int!){
+  delete_shared_data_by_pk(id:$id){
+    id
+  }
+}
+
+{
+  "id": 19
 }
