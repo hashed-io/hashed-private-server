@@ -1,0 +1,118 @@
+type Mutation {
+  generate_login_challenge(
+    req: GenerateLoginChallengeRequest!
+  ): GenerateLoginChallengeResponse
+}
+
+type Mutation {
+  login(
+    req: LoginRequest!
+  ): LoginResponse
+}
+
+type Mutation {
+  share(
+    req: ShareRequest!
+  ): SharedData
+}
+
+type Mutation {
+  soft_delete_owned_data(
+    req: SoftDeleteOwnedDataRequest!
+  ): AffectedRowsResponse
+}
+
+type Mutation {
+  update_shared_data_metadata(
+    req: UpdateSharedDataMetadataRequest!
+  ): AffectedRowsResponse
+}
+
+type Mutation {
+  upsert_owned_data(
+    req: UpsertOwnedDataRequest!
+  ): OwnedData
+}
+
+input GenerateLoginChallengeRequest {
+  address: String!
+}
+
+input LoginRequest {
+  address: String!
+  signature: String!
+}
+
+input UpsertOwnedDataRequest {
+  id: Int
+  name: String!
+  description: String!
+  type: String!
+  cid: String!
+}
+
+input DeleteOwnedDataRequest {
+  id: Int!
+}
+
+input ShareRequest {
+  to_user_id: uuid!
+  original_owned_data_id: Int!
+  cid: String!
+}
+
+input UpdateSharedDataMetadataRequest {
+  id: Int!
+  name: String!
+  description: String!
+}
+
+input SoftDeleteOwnedDataRequest {
+  id: Int!
+}
+
+type GenerateLoginChallengeResponse {
+  message: String!
+}
+
+type LoginResponse {
+  refresh_token: String!
+  token: String!
+  user: User
+}
+
+type User {
+  address: String!
+  id: uuid!
+  public_key: String!
+  security_data: String!
+}
+
+type OwnedData {
+  id: Int
+  owner_user_id: uuid!
+  name: String!
+  description: String!
+  type: String!
+  cid: String!
+  original_cid: String!
+  started_at: timestamptz!
+  ended_at: timestamptz
+  is_deleted: Boolean!
+}
+
+type AffectedRowsResponse {
+  affected_rows: Int!
+}
+
+type SharedData {
+  id: Int!
+  from_user_id: uuid!
+  to_user_id: uuid!
+  original_owned_data_id: Int!
+  name: String!
+  description: String!
+  cid: String!
+  shared_at: timestamptz!
+}
+

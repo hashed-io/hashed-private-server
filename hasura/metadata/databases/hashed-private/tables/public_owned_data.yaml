@@ -5,3 +5,32 @@ object_relationships:
   - name: user
     using:
       foreign_key_constraint_on: owner_user_id
+array_relationships:
+  - name: shared_data
+    using:
+      foreign_key_constraint_on:
+        column: original_owned_data_id
+        table:
+          schema: public
+          name: shared_data
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - is_deleted
+        - id
+        - cid
+        - description
+        - name
+        - original_cid
+        - type
+        - ended_at
+        - started_at
+        - owner_user_id
+      filter:
+        _or:
+          - owner_user_id:
+              _eq: X-Hasura-User-Id
+          - shared_data:
+              to_user_id:
+                _eq: X-Hasura-User-Id

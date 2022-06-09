@@ -1,3 +1,31 @@
 table:
   schema: public
   name: user
+object_relationships:
+  - name: private_info
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: user_private
+        insertion_order: null
+        column_mapping:
+          id: user_id
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - address
+        - id
+        - public_key
+      filter: {}
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - public_key
+        - security_data
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      check: null
