@@ -18,7 +18,9 @@ CREATE TABLE public.owned_data (
     original_cid text NOT NULL,
     started_at timestamp with time zone NOT NULL,
     ended_at timestamp with time zone,
-    is_deleted boolean DEFAULT false NOT NULL
+    is_deleted boolean DEFAULT false NOT NULL,
+    iv text NOT NULL,
+    mac text NOT NULL
 );
 COMMENT ON TABLE public.owned_data IS 'Stores information related to user owned data';
 CREATE SEQUENCE public.owned_data_id_seq
@@ -37,7 +39,9 @@ CREATE TABLE public.shared_data (
     cid text NOT NULL,
     name text NOT NULL,
     description text NOT NULL,
-    shared_at timestamp with time zone NOT NULL
+    shared_at timestamp with time zone NOT NULL,
+    iv text NOT NULL,
+    mac text NOT NULL
 );
 COMMENT ON TABLE public.shared_data IS 'Stores information related to the data that has been shared';
 CREATE SEQUENCE public.shared_data_id_seq
@@ -73,6 +77,8 @@ ALTER TABLE ONLY public."user"
     ADD CONSTRAINT user_address_key UNIQUE (address);
 ALTER TABLE ONLY public."user"
     ADD CONSTRAINT user_pkey PRIMARY KEY (id);
+CREATE INDEX owned_data_cid_hash_idx ON public.owned_data USING hash (cid);
+CREATE INDEX shared_data_cid_hash_idx ON public.shared_data USING hash (cid);
 ALTER TABLE ONLY public.owned_data
     ADD CONSTRAINT owned_data_owner_user_id_fkey FOREIGN KEY (owner_user_id) REFERENCES public."user"(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.shared_data
