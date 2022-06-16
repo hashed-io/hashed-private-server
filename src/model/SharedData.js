@@ -2,7 +2,7 @@ const { Unauthorized, BadRequest } = require('http-errors')
 const { gql } = require('graphql-request')
 
 const INSERT_SHARED_DATA = gql`
-  mutation insert_shared_data($fromUserId: uuid!, $toUserId: uuid!, $originalOwnedDataId: Int!, $cid: String!, $name: String!, $description: String!, $sharedAt: timestamptz!) {
+  mutation insert_shared_data($fromUserId: uuid!, $toUserId: uuid!, $originalOwnedDataId: Int!, $cid: String!, $name: String!, $description: String!, $sharedAt: timestamptz!, $iv: String!, $mac: String!) {
     insert_shared_data_one(object: {
       from_user_id: $fromUserId, 
       to_user_id: $toUserId, 
@@ -10,7 +10,9 @@ const INSERT_SHARED_DATA = gql`
       cid: $cid,
       name: $name, 
       description: $description,    
-      shared_at: $sharedAt
+      shared_at: $sharedAt,
+      iv: $iv,
+      mac: $mac
     }) {      
         id
         from_user_id
@@ -20,6 +22,8 @@ const INSERT_SHARED_DATA = gql`
         description
         cid
         shared_at
+        iv
+        mac
     }
   }
 `
@@ -49,6 +53,8 @@ const FIND_SHARED_DATA_BY_ID = gql`
       description
       cid
       shared_at
+      iv
+      mac
     }
   }
 `
@@ -63,7 +69,9 @@ class SharedData {
     fromUserId,
     toUserId,
     originalOwnedDataId,
-    cid
+    cid,
+    iv,
+    mac
   }) {
     if (fromUserId === toUserId) {
       throw new BadRequest('Can not share data with self')
@@ -83,7 +91,9 @@ class SharedData {
         originalOwnedDataId,
         cid,
         name,
-        description
+        description,
+        iv,
+        mac
       })
     } catch (err) {
       if (err.message.includes('shared_data_original_owned_data_id_to_user_id_key')) {
@@ -99,7 +109,9 @@ class SharedData {
     originalOwnedDataId,
     name,
     description,
-    cid
+    cid,
+    iv,
+    mac
   }) {
     const { insert_shared_data_one: sharedData } = await this.gql.request(INSERT_SHARED_DATA, {
       fromUserId,
@@ -108,6 +120,8 @@ class SharedData {
       name,
       description,
       cid,
+      iv,
+      mac,
       sharedAt: new Date()
     })
     return sharedData

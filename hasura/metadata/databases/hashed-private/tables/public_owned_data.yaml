@@ -2,7 +2,7 @@ table:
   schema: public
   name: owned_data
 object_relationships:
-  - name: user
+  - name: owner_user
     using:
       foreign_key_constraint_on: owner_user_id
 array_relationships:
@@ -17,16 +17,18 @@ select_permissions:
   - role: user
     permission:
       columns:
-        - is_deleted
-        - id
         - cid
         - description
+        - ended_at
+        - id
+        - is_deleted
+        - iv
+        - mac
         - name
         - original_cid
-        - type
-        - ended_at
-        - started_at
         - owner_user_id
+        - started_at
+        - type
       filter:
         _or:
           - owner_user_id:

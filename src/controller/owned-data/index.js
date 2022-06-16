@@ -2,7 +2,8 @@
 
 const {
   deleteOwnedDataSchema,
-  upsertOwnedDataSchema
+  upsertOwnedDataSchema,
+  updateOwnedDataMetadataSchema
 } = require('./schemas')
 
 module.exports = async function (fastify, opts) {
@@ -15,6 +16,7 @@ module.exports = async function (fastify, opts) {
     fastify.addHook('preHandler', fastify.authenticate)
     fastify.post('/delete', { schema: deleteOwnedDataSchema }, deleteHandler)
     fastify.post('/upsert', { schema: upsertOwnedDataSchema }, upsertHandler)
+    fastify.post('/update-metadata', { schema: updateOwnedDataMetadataSchema }, updateMetadataHandler)
   })
 }
 
@@ -38,4 +40,9 @@ async function deleteHandler (req, reply) {
 async function upsertHandler (req, reply) {
   const payload = req.hydrateWithUserId('body', 'ownerUserId')
   return this.ownedData.upsert(payload)
+}
+
+async function updateMetadataHandler (req, reply) {
+  const payload = req.hydrateWithUserId('body', 'ownerUserId')
+  return this.ownedData.updateMetadata(payload)
 }

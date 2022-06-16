@@ -2,7 +2,7 @@ const { Unauthorized, BadRequest } = require('http-errors')
 const { gql } = require('graphql-request')
 
 const INSERT_OWNED_DATA = gql`
-  mutation insert_owned_data($ownerUserId: uuid!, $name: String!, $description: String!, $type: String!, $cid: String!, $originalCID: String!, $startedAt: timestamptz!) {
+  mutation insert_owned_data($ownerUserId: uuid!, $name: String!, $description: String!, $type: String!, $cid: String!, $originalCID: String!, $startedAt: timestamptz!, $iv: String!, $mac: String!) {
     insert_owned_data_one(object: {
       owner_user_id: $ownerUserId, 
       name: $name, 
@@ -11,6 +11,8 @@ const INSERT_OWNED_DATA = gql`
       cid: $cid,
       original_cid: $originalCID, 
       started_at: $startedAt
+      iv: $iv,
+      mac: $mac
     }) {      
         id
         owner_user_id
@@ -21,13 +23,15 @@ const INSERT_OWNED_DATA = gql`
         original_cid
         started_at
         ended_at
+        iv
+        mac
         is_deleted
     }
   }
 `
 
 const NEW_OWNED_DATA_VERSION = gql`
-  mutation new_owned_data_version($ownerUserId: uuid!, $originalCID: String!, $timestamp: timestamptz!, $name: String!, $description: String!, $type: String!, $cid: String!) {
+  mutation new_owned_data_version($ownerUserId: uuid!, $originalCID: String!, $timestamp: timestamptz!, $name: String!, $description: String!, $type: String!, $cid: String!, $iv: String!, $mac: String!) {
   update_owned_data(
   _set: {
     ended_at: $timestamp
@@ -55,7 +59,9 @@ const NEW_OWNED_DATA_VERSION = gql`
       type: $type,
       cid: $cid,
       original_cid: $originalCID, 
-      started_at: $timestamp
+      started_at: $timestamp,
+      iv: $iv,
+      mac: $mac
     }) {      
       id
       owner_user_id
@@ -66,6 +72,8 @@ const NEW_OWNED_DATA_VERSION = gql`
       original_cid
       started_at
       ended_at
+      iv
+      mac
       is_deleted
     }
 }
@@ -113,6 +121,8 @@ const FIND_OWNED_DATA_BY_ID = gql`
       original_cid
       started_at
       ended_at
+      iv
+      mac
       is_deleted
     }
   }
@@ -165,7 +175,9 @@ class OwnedData {
     name,
     description,
     type,
-    cid
+    cid,
+    iv,
+    mac
   }) {
     if (id) {
       const {
@@ -178,7 +190,9 @@ class OwnedData {
           description,
           type,
           cid,
-          originalCID: currentCID
+          originalCID: currentCID,
+          iv,
+          mac
         })
       } else {
         await this._updateMetadata({
@@ -194,7 +208,9 @@ class OwnedData {
         name,
         description,
         type,
-        cid
+        cid,
+        iv,
+        mac
       })
     }
   }
@@ -210,7 +226,6 @@ class OwnedData {
   }
 
   async findById (id) {
-    console.log('id:::', id)
     const { owned_data_by_pk: ownedData } = await this.gql.request(FIND_OWNED_DATA_BY_ID, {
       id
     })
@@ -246,7 +261,9 @@ class OwnedData {
     name,
     description,
     type,
-    cid
+    cid,
+    iv,
+    mac
   }) {
     const { insert_owned_data_one: ownedData } = await this.gql.request(INSERT_OWNED_DATA, {
       ownerUserId,
@@ -254,10 +271,26 @@ class OwnedData {
       description,
       type,
       cid,
+      iv,
+      mac,
       originalCID: cid,
       startedAt: new Date()
     })
     return ownedData
+  }
+
+  async updateMetadata ({
+    id,
+    ownerUserId,
+    name,
+    description
+  }) {
+    await this.getById({ id, ownerUserId })
+    return this._updateMetadata({
+      id,
+      name,
+      description
+    })
   }
 
   async _updateMetadata ({
@@ -265,11 +298,12 @@ class OwnedData {
     name,
     description
   }) {
-    await this.gql.request(UPDATE_OWNED_DATA_METADATA, {
+    const { update_owned_data: affectedRows } = await this.gql.request(UPDATE_OWNED_DATA_METADATA, {
       id,
       name,
       description
     })
+    return affectedRows
   }
 
   async _insertNewVersion ({
@@ -278,7 +312,10 @@ class OwnedData {
     description,
     type,
     cid,
-    originalCID
+    originalCID,
+    iv,
+    mac
+
   }) {
     const { insert_owned_data_one: ownedData } = await this.gql.request(NEW_OWNED_DATA_VERSION, {
       ownerUserId,
@@ -287,6 +324,8 @@ class OwnedData {
       type,
       cid,
       originalCID,
+      iv,
+      mac,
       timestamp: new Date()
     })
     return ownedData

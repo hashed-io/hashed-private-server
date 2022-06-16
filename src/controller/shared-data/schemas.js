@@ -3,6 +3,8 @@ const {
   nameSchema,
   cidSchema,
   descriptionSchema,
+  ivSchema,
+  macSchema,
   timestampSchema,
   responseAffectedRows
 } = require('../../schemas')
@@ -16,7 +18,9 @@ const shareDataSchema = {
     properties: {
       toUserId: uuidTypeSchema,
       originalOwnedDataId: { type: 'integer' },
-      cid: cidSchema
+      cid: cidSchema,
+      iv: ivSchema,
+      mac: macSchema
     }
   },
   response: {
@@ -31,7 +35,9 @@ const shareDataSchema = {
         name: nameSchema,
         description: descriptionSchema,
         cid: cidSchema,
-        shared_at: timestampSchema
+        shared_at: timestampSchema,
+        iv: ivSchema,
+        mac: macSchema
       }
     }
   }

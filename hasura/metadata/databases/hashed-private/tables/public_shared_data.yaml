@@ -15,13 +15,15 @@ select_permissions:
   - role: user
     permission:
       columns:
-        - id
-        - original_owned_data_id
         - cid
         - description
-        - name
-        - shared_at
         - from_user_id
+        - id
+        - iv
+        - mac
+        - name
+        - original_owned_data_id
+        - shared_at
         - to_user_id
       filter:
         _or:

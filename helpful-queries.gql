@@ -43,19 +43,23 @@ mutation login($address: String!, $signature: String!){
 
 
 
-mutation upsert_owned_data($id: Int, $name: String!, $description: String!, $cid: String!, $type: String! ){
+mutation upsert_owned_data($id: Int, $name: String!, $description: String!, $cid: String!, $type: String!, $iv: String!, $mac: String! ){
   upsert_owned_data(req:{
     id: $id,
     name: $name,
     description: $description,
     cid: $cid,
-    type: $type
+    type: $type,
+    iv: $iv,
+    mac: $mac
   }){
     id
     name
     description
     cid
     type
+    iv
+    mac
     started_at
     ended_at
     is_deleted
@@ -71,6 +75,23 @@ mutation upsert_owned_data($id: Int, $name: String!, $description: String!, $cid
 }
 
 
+mutation update_owned_data_metadata($id: Int!, $name: String!, $description: String!){
+  update_owned_data_metadata(req:{
+    id: $id,
+    name:$name,
+    description: $description
+  }){
+    affected_rows
+  }
+}
+
+{
+  "id": 29,
+  "name": "name gql5",
+  "description": "desc gql5"
+}
+
+
 mutation soft_delete_owned_data($id: Int!){
   soft_delete_owned_data(req:{
     id: $id
@@ -83,11 +104,13 @@ mutation soft_delete_owned_data($id: Int!){
   "id": 26
 }
 
-mutation share($toUserId: uuid!, $originalOwnedDataId: Int!, $cid: String!){
+mutation share($toUserId: uuid!, $originalOwnedDataId: Int!, $cid: String!, $iv: String!, $mac: String! ){
   share(req:{
     to_user_id: $toUserId,
     original_owned_data_id:$originalOwnedDataId,
-    cid: $cid
+    cid: $cid,
+    iv: $iv,
+    mac: $mac
   }){
     id
     from_user{
@@ -106,6 +129,8 @@ mutation share($toUserId: uuid!, $originalOwnedDataId: Int!, $cid: String!){
       id
       type
     }
+    iv
+    mac
   }
 }
 

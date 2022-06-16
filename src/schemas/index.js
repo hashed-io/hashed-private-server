@@ -23,6 +23,8 @@ const uuidTypeSchema = { type: 'string', minLength: 36, maxLength: 36 }
 const nameSchema = { type: 'string', minLength: 3, maxLength: 25 }
 const descriptionSchema = { type: 'string', minLength: 5, maxLength: 150 }
 const cidSchema = { type: 'string', minLength: 30, maxLength: 70 }
+const ivSchema = { type: 'string', minLength: 32, maxLength: 32 }
+const macSchema = { type: 'string', minLength: 64, maxLength: 64 }
 const timestampSchema = { type: 'string' }
 const nullableTimestampSchema = { ...timestampSchema, nullable: true }
 const typeSchema = { type: 'string', minLength: 2, maxLength: 10 }
@@ -37,6 +39,8 @@ const _ownedDataSchema = (props = {}, required = []) => ({
     type: typeSchema,
     cid: cidSchema,
     original_cid: cidSchema,
+    iv: ivSchema,
+    mac: macSchema,
     started_at: timestampSchema,
     ended_at: nullableTimestampSchema,
     is_deleted: { type: 'boolean' },
@@ -55,6 +59,8 @@ module.exports = {
   nameSchema,
   descriptionSchema,
   cidSchema,
+  ivSchema,
+  macSchema,
   timestampSchema,
   nullableTimestampSchema,
   typeSchema,

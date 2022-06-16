@@ -23,6 +23,12 @@ type Mutation {
 }
 
 type Mutation {
+  update_owned_data_metadata(
+    req: UpdateOwnedDataMetadataRequest!
+  ): AffectedRowsResponse
+}
+
+type Mutation {
   update_shared_data_metadata(
     req: UpdateSharedDataMetadataRequest!
   ): AffectedRowsResponse
@@ -49,6 +55,8 @@ input UpsertOwnedDataRequest {
   description: String!
   type: String!
   cid: String!
+  iv: String!
+  mac: String!
 }
 
 input DeleteOwnedDataRequest {
@@ -59,6 +67,8 @@ input ShareRequest {
   to_user_id: uuid!
   original_owned_data_id: Int!
   cid: String!
+  iv: String!
+  mac: String!
 }
 
 input UpdateSharedDataMetadataRequest {
@@ -69,6 +79,12 @@ input UpdateSharedDataMetadataRequest {
 
 input SoftDeleteOwnedDataRequest {
   id: Int!
+}
+
+input UpdateOwnedDataMetadataRequest {
+  id: Int!
+  name: String!
+  description: String!
 }
 
 type GenerateLoginChallengeResponse {
@@ -98,6 +114,8 @@ type OwnedData {
   original_cid: String!
   started_at: timestamptz!
   ended_at: timestamptz
+  iv: String!
+  mac: String!
   is_deleted: Boolean!
 }
 
@@ -114,5 +132,7 @@ type SharedData {
   description: String!
   cid: String!
   shared_at: timestamptz!
+  iv: String!
+  mac: String!
 }
 
