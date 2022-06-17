@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
   graphql-engine:
-    image: hasura/graphql-engine:v2.6.2.cli-migrations-v3
+    image: hasura/graphql-engine:v2.8.0.cli-migrations-v3
     volumes:
       # - ./hasura/migrations:/hasura-migrations
       - ./hasura/metadata:/hasura-metadata

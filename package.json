@@ -12,8 +12,11 @@
     "build-client:start:dev": "npm run build-client-dev && npm run start:dev",
     "build-client:start:uat": "npm run build-client-uat && npm run start:uat",
     "start": "node src/index.js",
+    "start:all": "./start-all.sh",
+    "down:all": "./down-all.sh",
     "build:start": "npm run build && npm run start",
     "test": "jest --watch"
+  
   },
   "author": "",
   "license": "ISC",

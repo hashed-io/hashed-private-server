@@ -1,4 +1,3 @@
-const fs = require('fs')
 const { Unauthorized } = require('http-errors')
 const { v4: uuid } = require('uuid')
 const { gql } = require('graphql-request')
@@ -46,8 +45,8 @@ class Login {
   }
 
   async generateChallenge ({ address }) {
-    // const message = 'challenge: ' + uuid()
-    const message = 'challenge: 43fbec1e-6f04-4486-931a-a0b1f90bb4d3'
+    const message = 'challenge: ' + uuid()
+    // const message = 'challenge: 43fbec1e-6f04-4486-931a-a0b1f90bb4d3'
     await this._upsertChallenge(address, message)
     return {
       message
