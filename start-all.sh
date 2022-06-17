@@ -20,7 +20,7 @@ cp .env.all .env
 if [[ $1 = build ]]; then
   docker-compose -f docker-compose.yaml -f docker-compose.all.yaml -f docker-compose.all.build.yaml -p hashed-private-$1 up --build -d
 else
-  docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml -p doc-cache-go-$1 up -d
+  docker-compose -f docker-compose.yaml -f docker-compose.all.yaml -f docker-compose.all.image.yaml -p hashed-private-$1 up -d
 fi
 
 popd

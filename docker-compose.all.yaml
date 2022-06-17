@@ -4,7 +4,7 @@ services:
   graphql-engine:
     image: hasura/graphql-engine:v2.8.0.cli-migrations-v3
     volumes:
-      # - ./hasura/migrations:/hasura-migrations
+      - ./hasura/migrations:/hasura-migrations
       - ./hasura/metadata:/hasura-metadata
   action-server:
     command: node src/index.js
