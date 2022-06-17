@@ -1,0 +1,9 @@
+{
+  "gql": {
+    "endpoint": "http://graphql-engine:8080/v1/graphql",
+    "secret": "myadminsecretkey"
+  },
+  "jwt": {
+    "keysPath": "/hashed-private-code/jwt-keys/test",
+  }
+}

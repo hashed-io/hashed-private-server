@@ -1,0 +1,6 @@
+version: '3.2'
+
+services:
+  action-server:
+    build: 
+      context: .

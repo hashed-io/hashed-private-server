@@ -1,0 +1,17 @@
+version: '3.2'
+
+services:
+  graphql-engine:
+    image: hasura/graphql-engine:v2.6.2.cli-migrations-v3
+    volumes:
+      # - ./hasura/migrations:/hasura-migrations
+      - ./hasura/metadata:/hasura-metadata
+  action-server:
+    command: node src/index.js
+    ports:
+    - ${ACTION_SERVER_PORT}:${ACTION_SERVER_PORT}
+    environment:
+      PORT: ${ACTION_SERVER_PORT}
+      NODE_ENV: ${NODE_ENV}
+    volumes:
+      - .:/hashed-private-code

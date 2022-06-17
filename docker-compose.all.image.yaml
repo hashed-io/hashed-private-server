@@ -22,15 +22,20 @@ services:
       ## this env var can be used to add the above postgres database to Hasura as a data source. this can be removed/updated based on your needs
       PG_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
       ## enable the console served by server
-      HASURA_GRAPHQL_ENABLE_CONSOLE: ${ENABLE_CONSOLE} # set to "false" to disable console
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
       ## enable debugging mode. It is recommended to disable this in production
       HASURA_GRAPHQL_DEV_MODE: "true"
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       ## uncomment next line to set an admin secret
       HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
-      EXTERNAL_API_ENDPOINT: http://${ACTION_SERVER_HOST}:${ACTION_SERVER_PORT}
-      HASURA_GRAPHQL_JWT_SECRET: '{"jwk_url":"http://${ACTION_SERVER_HOST}:${ACTION_SERVER_PORT}/api/jwk/list"}'
+      EXTERNAL_API_ENDPOINT: http://172.17.0.1:3000
+      HASURA_GRAPHQL_JWT_SECRET: '{"jwk_url":"http://172.17.0.1:3000/api/jwk/list"}'
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: unauthenticated
+  action-server:
+    ports:
+    - ${ACTION_SERVER_PORT}:${ACTION_SERVER_PORT}
+    environment:
+      PORT: ${ACTION_SERVER_PORT}
 volumes:
   db_data:
 
