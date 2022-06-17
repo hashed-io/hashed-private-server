@@ -4,6 +4,6 @@
     "secret": "myadminsecretkey"
   },
   "jwt": {
-    "keysPath": "/hashed-private-code/jwt-keys/test",
+    "keysPath": "/hashed-private-code/jwt-keys/test"
   }
 }
