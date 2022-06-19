@@ -1,0 +1,9 @@
+{
+  "gql": {
+    "endpoint": "GQL_ENDPOINT",
+    "secret": "GQL_SECRET"
+  },
+  "jwt": {
+    "keysPath": "JWT_KEYS_PATH"
+  }
+}
