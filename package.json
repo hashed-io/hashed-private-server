@@ -16,7 +16,6 @@
     "down:all": "./down-all.sh",
     "build:start": "npm run build && npm run start",
     "test": "jest --watch"
-  
   },
   "author": "",
   "license": "ISC",
@@ -28,7 +27,6 @@
     "axios": "^0.27.2",
     "binary-uuid": "^2.0.3",
     "config": "^3.3.7",
-    "crypto": "^1.0.1",
     "date-diff": "^1.0.2",
     "fastify": "^3.29.0",
     "fastify-auth0-verify": "^0.7.4",
