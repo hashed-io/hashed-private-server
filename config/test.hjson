@@ -1,0 +1,6 @@
+{
+  "gql": {
+    "endpoint": "http://localhost:8080/v1/graphql",
+    "secret": "myadminsecretkey"
+  }
+}

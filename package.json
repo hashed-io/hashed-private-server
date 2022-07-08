@@ -23,7 +23,6 @@
     "@fastify/cors": "^7.0.0",
     "@fastify/swagger": "^6.0.1",
     "@polkadot/util": "^9.3.1",
-    "@polkadot/util-crypto": "^9.3.1",
     "axios": "^0.27.2",
     "binary-uuid": "^2.0.3",
     "config": "^3.3.7",
@@ -42,6 +41,8 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@polkadot/keyring": "^9.7.2",
+    "@polkadot/util-crypto": "^9.7.2",
     "@types/jest": "^27.5.1",
     "eslint": "^8.16.0",
     "eslint-config-standard": "^17.0.0",

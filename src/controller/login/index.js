@@ -5,19 +5,22 @@ const {
   loginSchema
 } = require('./schemas')
 
+/**
+ * Provides the endpoints for user authentication
+ */
 module.exports = async function (fastify, opts) {
-  // Route registration
-  // fastify.<method>(<path>, <schema>, <handler>)
-  // schema is used to validate the input and serialize the output
-
-  // Logged APIs
   fastify.register(async function (fastify) {
+    /**
+     * Generates the challenge that should be signed by the user that wants to authenticate
+     */
     fastify.post('/challenge', { schema: generateChallengeSchema }, generateChallengeHandler)
+    /**
+     * Verifies the signed challenge, and on success produces a JWT token
+     */
     fastify.post('/login', { schema: loginSchema }, loginHandler)
   })
 }
 
-// Fastify checks the existance of those decorations before registring `user.js`
 module.exports[Symbol.for('plugin-meta')] = {
   decorators: {
     fastify: [
@@ -25,9 +28,6 @@ module.exports[Symbol.for('plugin-meta')] = {
     ]
   }
 }
-
-// In all handlers `this` is the fastify instance
-// The fastify instance used for the handler registration
 
 async function generateChallengeHandler (req, reply) {
   return this.login.generateChallenge(req.body)

@@ -5,20 +5,23 @@ const {
   updateSharedDataMetadataSchema
 } = require('./schemas')
 
+/**
+ * Provides the endpoints for managing shared data records
+ */
 module.exports = async function (fastify, opts) {
-  // Route registration
-  // fastify.<method>(<path>, <schema>, <handler>)
-  // schema is used to validate the input and serialize the output
-
-  // Logged APIs
   fastify.register(async function (fastify) {
     fastify.addHook('preHandler', fastify.authenticate)
+    /**
+     * Inserts shared data record
+     */
     fastify.post('/share', { schema: shareDataSchema }, shareHandler)
+    /**
+     * Updates the metadata of a shared data record
+     */
     fastify.post('/update-metadata', { schema: updateSharedDataMetadataSchema }, updateMetadataHandler)
   })
 }
 
-// Fastify checks the existance of those decorations before registring `user.js`
 module.exports[Symbol.for('plugin-meta')] = {
   decorators: {
     fastify: [
@@ -26,9 +29,6 @@ module.exports[Symbol.for('plugin-meta')] = {
     ]
   }
 }
-
-// In all handlers `this` is the fastify instance
-// The fastify instance used for the handler registration
 
 async function shareHandler (req, reply) {
   const payload = req.hydrateWithUserId('body', 'fromUserId')

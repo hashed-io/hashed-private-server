@@ -164,11 +164,41 @@ const FIND_OWNED_DATA_BY_ID = gql`
 //   }
 // `
 
+/**
+ * Provides the functionality to manage a users owned data
+ */
 class OwnedData {
   constructor ({ gql }) {
     this.gql = gql
   }
 
+  /**
+   * @desc Inserts or updates an owned data record
+   *
+   * @param {int} [id] id of an existant record, its an optional parameter
+   * @param {string} ownerUserId id of the user that owns the data
+   * @param {string} name a name related to the payload
+   * @param {string} description a description related to the payload
+   * @param {string} type the type of the payload
+   * @param {string} cid of the ciphered payload
+   * @param {string} iv initialization vector
+   * @param {string} mac message authentication code
+   * @return {Object} with the following structure
+   * {
+   *  "id": 69,
+   *  "owner_user_id": "a917e2b7-596e-4bc0-be79-9828b0b3ea78",
+   *  "name": "name",
+   *  "description": "desc",
+   *  "type": "json",
+   *  "cid": "QmeHEb5TF4zkP2H6Mg5TcrvDs5egPCJgWFBB7YZaLmK7jr",
+   *  "original_cid": "QmeHEb5TF4zkP2H6Mg5TcrvDs5egPCJgWFBB7YZaLmK7jr",
+   *  "started_at": "2022-06-14T13:43:15.108+00:00",
+   *  "ended_at": null,
+   *  "iv": "d232f60b340d7235beafed405b08b811",
+   *  "mac": "6da9ce5375af9cdadf762e0910674c8b10b0c2c87500ce5c36fe0d2c8ea9fa5d",
+   *  "is_deleted": false
+   * }
+   */
   async upsert ({
     id,
     ownerUserId,
@@ -215,16 +245,46 @@ class OwnedData {
     }
   }
 
+  /**
+   * @desc Soft deletes an owned data record
+   *
+   * @param {int} id id of an existant record
+   * @param {string} ownerUserId id of the user that owns the data
+   *
+   * @return {Object} with the following structure
+   * {"affected_rows": 1}
+   */
   async deleteById ({ id, ownerUserId }) {
     await this.getById({ id, ownerUserId })
     const { update_owned_data: affectedRows } = await this.gql.request(DELETE_OWNED_DATA_BY_ID, {
       id,
       endedAt: new Date()
     })
-    console.log('response: ', affectedRows)
+    // console.log('response: ', affectedRows)
     return affectedRows
   }
 
+  /**
+   * @desc Finds an owned data record by id
+   *
+   * @param {int} id id of an existant record
+   *
+   * @return {Object} with the following structure
+   * {
+   *  "id": 69,
+   *  "owner_user_id": "a917e2b7-596e-4bc0-be79-9828b0b3ea78",
+   *  "name": "name",
+   *  "description": "desc",
+   *  "type": "json",
+   *  "cid": "QmeHEb5TF4zkP2H6Mg5TcrvDs5egPCJgWFBB7YZaLmK7jr",
+   *  "original_cid": "QmeHEb5TF4zkP2H6Mg5TcrvDs5egPCJgWFBB7YZaLmK7jr",
+   *  "started_at": "2022-06-14T13:43:15.108+00:00",
+   *  "ended_at": null,
+   *  "iv": "d232f60b340d7235beafed405b08b811",
+   *  "mac": "6da9ce5375af9cdadf762e0910674c8b10b0c2c87500ce5c36fe0d2c8ea9fa5d",
+   *  "is_deleted": false
+   * }
+   */
   async findById (id) {
     const { owned_data_by_pk: ownedData } = await this.gql.request(FIND_OWNED_DATA_BY_ID, {
       id
@@ -232,6 +292,33 @@ class OwnedData {
     return ownedData
   }
 
+  /**
+   * @desc Gets an owned data record by id
+   *
+   * @param {int} id id of an existant record
+   * @param {string} ownerUserId id of the user that owns the data
+   * @param {boolean} current whether to only get the record if it is the latest
+   * record for the payload
+   *
+   * @return {Object} with the following structure
+   * {
+   *  "id": 69,
+   *  "owner_user_id": "a917e2b7-596e-4bc0-be79-9828b0b3ea78",
+   *  "name": "name",
+   *  "description": "desc",
+   *  "type": "json",
+   *  "cid": "QmeHEb5TF4zkP2H6Mg5TcrvDs5egPCJgWFBB7YZaLmK7jr",
+   *  "original_cid": "QmeHEb5TF4zkP2H6Mg5TcrvDs5egPCJgWFBB7YZaLmK7jr",
+   *  "started_at": "2022-06-14T13:43:15.108+00:00",
+   *  "ended_at": null,
+   *  "iv": "d232f60b340d7235beafed405b08b811",
+   *  "mac": "6da9ce5375af9cdadf762e0910674c8b10b0c2c87500ce5c36fe0d2c8ea9fa5d",
+   *  "is_deleted": false
+   * }
+   * @throws BadRequest if the owned data record does not exist or
+   * if the current parameter is true and the record is not the latest,
+   * @throws Unauthorized if the user is not the owner of the data
+   */
   async getById ({
     id,
     ownerUserId = null,
@@ -279,6 +366,16 @@ class OwnedData {
     return ownedData
   }
 
+  /**
+   * @desc Updates the metadata related to an owned data record
+   *
+   * @param {int} id id of an existant record
+   * @param {string} ownerUserId id of the user that owns the data
+   * @param {string} name a name related to the payload
+   * @param {string} description a description related to the payload
+   * @return {Object} with the following structure
+   * {"affected_rows": 1}
+   */
   async updateMetadata ({
     id,
     ownerUserId,

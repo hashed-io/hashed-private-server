@@ -36,6 +36,9 @@ const FIND_CHALLENGE = gql`
   }
 `
 
+/**
+ * Provides the logic to support Login authentication
+ */
 class Login {
   constructor ({ gql, jwt, opts, user }) {
     this.gql = gql
@@ -44,6 +47,15 @@ class Login {
     this.jwt = jwt
   }
 
+  /**
+   * @desc Generates a new challenge for the user trying to authenticate to sign
+   *
+   * @param {string} address the user's address
+   * @return {Object} with the following structure
+   * {
+   *  "message": "challenge: 43fbec1e-6f04-4486-931a-a0b1f90bb4d3"
+   * }
+   */
   async generateChallenge ({ address }) {
     const message = 'challenge: ' + uuid()
     // const message = 'challenge: 43fbec1e-6f04-4486-931a-a0b1f90bb4d3'
@@ -53,6 +65,24 @@ class Login {
     }
   }
 
+  /**
+   * @desc Verifies the signed challenge and on success produces a JWT token
+   *
+   * @param {string} address the users address
+   * @param {string} signature the signed challenge
+   * @return {Object} with the following structure
+   * {
+   *  "token": "jwt token",
+   *  "user": {
+   *    "id": "user id",
+   *    "address": "user address"
+   *    "public_key": "public key",
+   *    "security_data": "private key"
+   *  }
+   * }
+   * @throws Unauthorized when there is no current challenge for the address or
+   *         if the signature is invalid
+   */
   async login ({ address, signature }) {
     const challenge = await this._findChallenge(address)
     if (!challenge) {
