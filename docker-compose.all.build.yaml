@@ -1,6 +1,9 @@
 version: '3.2'
 
 services:
+  graphql-engine:
+    volumes:
+      - ./hasura/metadata:/hasura-metadata
   action-server:
     build: 
       context: .

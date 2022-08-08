@@ -1,5 +1,9 @@
 version: '3.2'
 
 services:
+  graphql-engine:
+    volumes:
+      - ./hasura/migrations:/hasura-migrations
+      - ./hasura/metadata:/hasura-metadata
   action-server:
     image: sebastianmontero/hashed-private-action-server-dev:latest
