@@ -8,7 +8,7 @@ yarn-debug.log*
 yarn-error.log*
 deploy.zip
 
-jwt-keys
+jwt-keys/prod
 # Editor directories and files
 .idea
 .vscode

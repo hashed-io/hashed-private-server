@@ -1,0 +1,2 @@
+ssh-keygen -t rsa -b 4096 -m PEM -f test-k2.key
+ssh-keygen -e -m PEM -f test-k2.key > test-k2.key.pub
