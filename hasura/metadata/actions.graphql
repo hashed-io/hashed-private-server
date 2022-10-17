@@ -1,4 +1,16 @@
 type Mutation {
+  create_group(
+    req: CreateGroupRequest!
+  ): CreateGroupResponse
+}
+
+type Query {
+  find_full_actors(
+    req: FindFullActorsRequest!
+  ): [FullActor]
+}
+
+type Mutation {
   generate_login_challenge(
     req: GenerateLoginChallengeRequest!
   ): GenerateLoginChallengeResponse
@@ -87,6 +99,16 @@ input UpdateOwnedDataMetadataRequest {
   description: String!
 }
 
+input CreateGroupRequest {
+  name: String!
+  public_key: String!
+  security_data: String!
+}
+
+input FindFullActorsRequest {
+  actorIds: [uuid!]
+}
+
 type GenerateLoginChallengeResponse {
   message: String!
 }
@@ -100,8 +122,8 @@ type LoginResponse {
 type User {
   address: String!
   id: uuid!
-  public_key: String!
-  security_data: String!
+  publicKey: String!
+  privateKey: String!
 }
 
 type OwnedData {
@@ -134,5 +156,21 @@ type SharedData {
   shared_at: timestamptz!
   iv: String!
   mac: String!
+}
+
+type CreateGroupResponse {
+  id: uuid!
+}
+
+type PrivateInfo {
+  privateKey: String!
+}
+
+type FullActor {
+  id: uuid!
+  name: String
+  address: String
+  publicKey: String
+  privateKey: String
 }
 

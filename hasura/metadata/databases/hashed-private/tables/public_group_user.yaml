@@ -1,0 +1,72 @@
+table:
+  schema: public
+  name: group_user
+object_relationships:
+  - name: group
+    using:
+      foreign_key_constraint_on: group_id
+  - name: role
+    using:
+      foreign_key_constraint_on: role_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+insert_permissions:
+  - role: user
+    permission:
+      check:
+        group:
+          users:
+            _and:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - role_id:
+                  _eq: 2
+      columns:
+        - group_id
+        - user_id
+        - role_id
+      backend_only: false
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - group_id
+        - role_id
+        - user_id
+      filter:
+        _or:
+          - group:
+              users:
+                _and:
+                  - user_id:
+                      _eq: X-Hasura-User-Id
+                  - role_id:
+                      _eq: 2
+          - user_id:
+              _eq: X-Hasura-User-Id
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - role_id
+      filter:
+        group:
+          users:
+            _and:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - role_id:
+                  _eq: 2
+      check: null
+delete_permissions:
+  - role: user
+    permission:
+      filter:
+        group:
+          users:
+            _and:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - role_id:
+                  _eq: 2

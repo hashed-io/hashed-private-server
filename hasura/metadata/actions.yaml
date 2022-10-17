@@ -1,4 +1,40 @@
 actions:
+  - name: create_group
+    definition:
+      kind: synchronous
+      handler: '{{EXTERNAL_API_ENDPOINT}}/api/group/create'
+      forward_client_headers: true
+      request_transform:
+        body:
+          action: transform
+          template: |-
+            {
+              "name": {{$body.input.req.name}},
+              "publicKey": {{$body.input.req.public_key}},
+              "securityData": {{$body.input.req.security_data}}
+            }
+        version: 2
+        template_engine: Kriti
+    permissions:
+      - role: user
+    comment: Creates a group, and adds creator as admin of group
+  - name: find_full_actors
+    definition:
+      kind: ""
+      handler: '{{EXTERNAL_API_ENDPOINT}}/api/actor/find-full'
+      forward_client_headers: true
+      request_transform:
+        body:
+          action: transform
+          template: |-
+            {
+              "actorIds": {{$body.input.req.actorIds}}
+            }
+        version: 2
+        template_engine: Kriti
+    permissions:
+      - role: user
+    comment: Enables the retrieval for full actor details the user has access to
   - name: generate_login_challenge
     definition:
       kind: synchronous
@@ -136,6 +172,8 @@ custom_types:
     - name: UpdateSharedDataMetadataRequest
     - name: SoftDeleteOwnedDataRequest
     - name: UpdateOwnedDataMetadataRequest
+    - name: CreateGroupRequest
+    - name: FindFullActorsRequest
   objects:
     - name: GenerateLoginChallengeResponse
     - name: LoginResponse
@@ -177,4 +215,7 @@ custom_types:
           type: object
           field_mapping:
             original_owned_data_id: id
+    - name: CreateGroupResponse
+    - name: PrivateInfo
+    - name: FullActor
   scalars: []

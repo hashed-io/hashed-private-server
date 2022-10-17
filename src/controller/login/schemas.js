@@ -1,4 +1,4 @@
-const { addressSchema, publicKeySchema, uuidTypeSchema } = require('../../schemas')
+const { addressSchema, publicKeySchema, uuidTypeSchema, securityDataSchema } = require('../../schemas')
 
 const tags = ['login']
 
@@ -41,12 +41,12 @@ const loginSchema = {
         token: { type: 'string' },
         user: {
           type: 'object',
-          required: ['id', 'address', 'public_key', 'security_data'],
+          required: ['id', 'address', 'publicKey', 'privateKey'],
           properties: {
             id: uuidTypeSchema,
             address: addressSchema,
-            public_key: publicKeySchema,
-            security_data: { type: 'string', nullable: true }
+            publicKey: publicKeySchema,
+            privateKey: securityDataSchema
           }
         }
       }

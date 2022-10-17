@@ -23,25 +23,25 @@ const { v4: uuid } = require('uuid')
 
 const FIND_USER = gql`
   query($address: String!) {
-    user(
+    actor(
       where:{
         address: {_eq:$address}
       }
     ) {
       id
       address
-      public_key,
-      security_data
+      publicKey: public_key
+      privateKey: security_data
     }
   }
 `
 
 const INSERT_USER_IF_NOT_EXISTS = gql`
   mutation($id: uuid!, $address: String!) {
-    insert_user_one(object: {
+    insert_actor_one(object: {
       id: $id,
       address: $address
-    }, on_conflict:{constraint:user_address_key, update_columns:[]}
+    }, on_conflict:{constraint:actor_address_key, update_columns:[]}
     ) {
       id
       address
@@ -70,7 +70,7 @@ class User {
    * }
    */
   async findByAddress (address) {
-    const { user: users } = await this.gql.request(FIND_USER, {
+    const { actor: users } = await this.gql.request(FIND_USER, {
       address
     })
     return users.length ? users[0] : null

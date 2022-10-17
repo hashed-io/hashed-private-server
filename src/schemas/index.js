@@ -18,9 +18,13 @@ const responseAffectedRows = {
 }
 
 const addressSchema = { type: 'string', minLength: 30, maxLength: 55 }
-const publicKeySchema = { type: 'string', minLength: 53, maxLength: 53, nullable: true }
+const nullableAddressSchema = { ...addressSchema, nullable: true }
+const publicKeySchema = { type: 'string', minLength: 3, maxLength: 70, nullable: true }
+const securityDataSchema = { type: 'string', minLength: 3, maxLength: 200, nullable: true }
 const uuidTypeSchema = { type: 'string', minLength: 36, maxLength: 36 }
 const nameSchema = { type: 'string', minLength: 3, maxLength: 25 }
+const groupNameSchema = { type: 'string', minLength: 3, maxLength: 25 }
+const nullableGroupNameSchema = { ...groupNameSchema, nullable: true }
 const descriptionSchema = { type: 'string', minLength: 5, maxLength: 150 }
 const cidSchema = { type: 'string', minLength: 30, maxLength: 70 }
 const ivSchema = { type: 'string', minLength: 32, maxLength: 32 }
@@ -53,6 +57,7 @@ const ownedDataSchema = _ownedDataSchema({ id: { type: 'integer' } }, ['id'])
 
 module.exports = {
   addressSchema,
+  nullableAddressSchema,
   publicKeySchema,
   uuidTypeSchema,
   response204,
@@ -65,5 +70,8 @@ module.exports = {
   nullableTimestampSchema,
   typeSchema,
   ownedDataSchema,
-  responseAffectedRows
+  responseAffectedRows,
+  groupNameSchema,
+  nullableGroupNameSchema,
+  securityDataSchema
 }

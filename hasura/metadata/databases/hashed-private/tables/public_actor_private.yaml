@@ -1,0 +1,26 @@
+table:
+  schema: public
+  name: actor_private
+array_relationships:
+  - name: users
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: group_user
+        insertion_order: null
+        column_mapping:
+          actor_id: group_id
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - actor_id
+        - security_data
+      filter:
+        _or:
+          - actor_id:
+              _eq: X-Hasura-User-Id
+          - users:
+              user_id:
+                _eq: X-Hasura-User-Id

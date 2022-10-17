@@ -3,6 +3,8 @@
 const fastify = require('fastify')
 const fp = require('fastify-plugin')
 const {
+  Actor,
+  Group,
   Login,
   OwnedData,
   User,
@@ -31,6 +33,12 @@ async function decorateFastifyInstance (fastify) {
   const gql = new GQL(gqlConfig)
   const jwt = new JWT(jwtConfig)
   jwt.init()
+  const actor = new Actor({
+    gql
+  })
+  const group = new Group({
+    gql
+  })
   const user = new User({
     gql
   })
@@ -47,6 +55,8 @@ async function decorateFastifyInstance (fastify) {
     opts: loginConfig,
     user
   })
+  fastify.decorate('actor', actor)
+  fastify.decorate('group', group)
   fastify.decorate('login', login)
   fastify.decorate('user', user)
   fastify.decorate('ownedData', ownedData)
@@ -81,6 +91,8 @@ async function main () {
     .register(require('./plugin/verify-jwt'))
     // .register(require('./plugin/authorize'))
     // APIs modules
+    .register(require('./controller/actor'), { prefix: '/api/actor' })
+    .register(require('./controller/group'), { prefix: '/api/group' })
     .register(require('./controller/login'), { prefix: '/api/login' })
     .register(require('./controller/jwk'), { prefix: '/api/jwk' })
     .register(require('./controller/owned-data'), { prefix: '/api/owned-data' })

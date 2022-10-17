@@ -21,12 +21,14 @@ mutation login($address: String!, $signature: String!){
     signature: $signature
   }){
     refresh_token
-    token
+    token	
     user{
       address
       id
-      public_key
-      security_data
+      publicKey
+      privateInfo{
+        privateKey
+      }
     }
   }
 }
@@ -167,3 +169,308 @@ mutation delete_shared_data($id: Int!){
 {
   "id": 19
 }
+
+
+mutation add_member($groupId: uuid!, $userId: uuid!, $roleId: Int!){
+  insert_group_user(objects:[
+    {
+      group_id: $groupId,
+      user_id: $userId,
+      role_id: $roleId
+    }
+  ]){
+    affected_rows
+  }
+}
+
+{
+  "groupId": "551030f9-6054-4ffa-b02d-a275398ec50d",
+  "userId": "9c960778-6756-4fcb-b151-b1c84d34fbaa",
+  "roleId": 1
+}
+
+
+mutation update_member($groupId: uuid!, $userId: uuid!, $roleId: Int!) {
+  update_group_user_by_pk(
+    pk_columns:{
+      group_id: $groupId,
+      user_id: $userId
+    },
+    _set: {
+      role_id: $roleId
+    }){
+    group_id
+    user_id
+    role_id
+  }
+}
+
+{
+  "groupId": "551030f9-6054-4ffa-b02d-a275398ec50d",
+  "userId": "9c960778-6756-4fcb-b151-b1c84d34fbaa",
+  "roleId": 1
+}
+
+
+mutation delete_member($groupId: uuid!, $userId: uuid!) {
+  delete_group_user_by_pk(group_id: $groupId, user_id: $userId){
+    group_id
+    user_id
+    role_id
+  }
+}
+
+{
+  "groupId": "551030f9-6054-4ffa-b02d-a275398ec50d",
+  "userId": "9c960778-6756-4fcb-b151-b1c84d34fbaa"
+}
+
+
+mutation create_doc($cid: String!, $ownerActorId: uuid!, $name: String!, $description: String!, $toActorId: uuid) {
+  insert_document_one(object: {
+    cid: $cid,
+    owner_actor_id: $ownerActorId,
+    to_actor_id: $toActorId,
+    name: $name,
+    description: $description
+  }){
+    cid
+  }
+}
+
+{
+  "cid": "cid9",
+  "ownerActorId": "d0b2aaac-aad7-4320-b42c-7cc5f3d72df7",
+  "toActorId": "3e4d4c1e-c0b1-433f-be0a-56cb662ce284",
+  "name": "doc1",
+  "description": "document 1"
+}
+
+
+query docs{
+  document{
+    cid
+    owner_actor_id
+    to_actor_id
+    name
+    description
+    created_at
+    owner{
+      name
+      address
+      public_key
+    }
+    to_actor{
+      name
+      address
+      public_key
+    }
+  }
+}
+
+
+query doc_by_cid($cid: String!){
+  document_by_pk(cid: $cid){
+    cid
+    ownerActorId: owner_actor_id
+    toActorId: to_actor_id
+    name
+    description
+    createdAt: created_at
+    owner{
+      name
+      address
+      publicKey: public_key
+    }
+    to_actor{
+      name
+      address
+      publicKey: public_key
+    }
+  }
+}
+
+{
+  "cid": "cid1"
+}
+
+mutation update_doc($cid: String!, $name: String!, $description: String!) {
+  update_document_by_pk(pk_columns:{
+    cid: $cid
+  },
+  _set:{
+    name: $name,
+    description: $description
+  }){
+    cid
+  }
+}
+
+
+{
+  "cid": "cid2",
+  "name": "doc7",
+  "description": "document 2"
+}
+
+
+query get_security_data($actorId: uuid!) {
+  actor_by_pk(id: $actorId){
+    id
+    name
+    address
+    publicKey: public_key
+    privateInfo: private_info{
+    	privateKey: security_data
+  	}
+  }
+}
+
+{
+  "actorId": "d0b2aaac-aad7-4320-b42c-7cc5f3d72df7"
+}
+
+mutation create_group($name: String!, $publicKey: String!, $securityData: String!) {
+  create_group(req: 
+    {
+      name: $name,
+      public_key: $publicKey,
+      security_data: $securityData
+    }
+  ){
+    id
+  }
+}
+
+{
+  "name": "group30",
+  "publicKey": "pubKey30",
+  "securityData": "privKey30"
+}
+
+mutation upsert_member($groupId: uuid!, $userId: uuid!, $roleId: Int!){
+  insert_group_user(objects:[
+    {
+      group_id: $groupId,
+      user_id: $userId,
+      role_id: $roleId
+    }
+  ],
+    on_conflict:{
+      constraint:group_user_pkey,
+      update_columns:[role_id]
+    }){
+    affected_rows
+  }
+}
+
+{
+  "groupId": "03bae3e7-2a99-441a-97c4-2585954d588e",
+  "userId": "9c960778-6756-4fcb-b151-b1c84d34fbaa",
+  "roleId": 2
+}
+
+
+query find_full_actors($ids: [uuid!]!, $userId: uuid!) {
+  actor(where:{
+    _and:{
+    	id:{_in:$ids}
+      _or:[
+        {
+           id: {
+        	  _eq:$userId
+          }
+      	},
+        {
+          users:{
+            user_id:{
+              _eq:$userId
+            }
+          }
+        }
+      ]
+    }
+  }){
+    id
+    name
+    address
+    publicKey: public_key,
+    privateKey: security_data
+  }
+}
+
+
+{
+  "ids": [
+    "d0b2aaac-aad7-4320-b42c-7cc5f3d72df7",
+    "551030f9-6054-4ffa-b02d-a275398ec50d",
+    "9c960778-6756-4fcb-b151-b1c84d34fbaa",
+    "e43c5a55-46a7-41fb-ae64-b04480d8ab74",
+    "c3bd2937-2cc0-4ba5-96c5-f4b7789c69cc"
+  ],
+  "userId": "e43c5a55-46a7-41fb-ae64-b04480d8ab74"
+}
+
+query find_full_actors($actorIds: [uuid!]!) {
+  find_full_actors(req: {
+    actorIds: $actorIds
+  }){
+    id
+    address
+    name
+    publicKey
+    privateKey
+  }
+}
+
+{
+  "actorIds": [
+    "d0b2aaac-aad7-4320-b42c-7cc5f3d72df7",
+    "551030f9-6054-4ffa-b02d-a275398ec50d",
+    "9c960778-6756-4fcb-b151-b1c84d34fbaa",
+    "e43c5a55-46a7-41fb-ae64-b04480d8ab74",
+    "c3bd2937-2cc0-4ba5-96c5-f4b7789c69cc"
+  ]
+}
+
+mutation delete_doc ($cid: String!) {
+  delete_document_by_pk(cid: $cid){
+    cid
+  }
+}
+
+{
+  "cid": "cid9"
+}
+
+
+query find_actor_by_id($actorId: uuid!) {
+  actor_by_pk(id: $actorId){
+    id
+    name
+    address
+    publicKey: public_key
+  }
+}
+
+{
+  "actorId": "d0b2aaac-aad7-4320-b42c-7cc5f3d72df7"
+}
+
+query find_actor_by_address($address: String!) {
+  actor(where:{
+    address:{
+      _eq: $address
+    }
+  }){
+    id
+    name
+    address
+    publicKey: public_key
+  }
+}
+
+{
+  "address": "5Dnk6vQhAVDY9ysZr8jrqWJENDWYHaF3zorFA4dr9Mtbei77"
+}
+
