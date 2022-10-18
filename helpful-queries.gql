@@ -474,3 +474,23 @@ query find_actor_by_address($address: String!) {
   "address": "5Dnk6vQhAVDY9ysZr8jrqWJENDWYHaF3zorFA4dr9Mtbei77"
 }
 
+
+query find_group_by_id($groupId: uuid!) {
+  actor_by_pk(id: $groupId){
+    id
+    name
+    publicKey: public_key,
+    users {
+      user {
+        id
+        address
+        publicKey: public_key
+      }
+    }
+  }
+}
+
+
+{
+  "groupId": "551030f9-6054-4ffa-b02d-a275398ec50d"
+}
