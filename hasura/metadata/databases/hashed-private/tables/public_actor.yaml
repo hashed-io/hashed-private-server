@@ -1,16 +1,6 @@
 table:
   schema: public
   name: actor
-object_relationships:
-  - name: private_info
-    using:
-      manual_configuration:
-        remote_table:
-          schema: public
-          name: actor_private
-        insertion_order: null
-        column_mapping:
-          id: actor_id
 array_relationships:
   - name: groups
     using:

@@ -1,5 +1,4 @@
 - "!include public_actor.yaml"
-- "!include public_actor_private.yaml"
 - "!include public_document.yaml"
 - "!include public_group_user.yaml"
 - "!include public_login_challenge.yaml"
