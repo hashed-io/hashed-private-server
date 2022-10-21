@@ -2,11 +2,12 @@
 
 Provides the backend services for Hashed Private solution:
 
-- Enables the user to authenticate with the service by sigining a challenge message with the private key related to their on chain account
-- Securly stores the user's private cipher key used to encrypt their owned payloads, this key is not the one related to their on chain account.
-- Enables the lookup of other users public keys, to enable the sharing of data privately 
-- Keeps track of each user's private data and related metadata
-- Keeps track of data shares and related metadata
+- Enables the user to authenticate with the service by signing a challenge message with the private key related to their on chain account
+- Enables the creation and management of groups whose members have access to the same documents
+- Securely stores the user's and group's private cipher key used to encrypt documents, this key is not the one related to their on chain account.
+- Enables the lookup of other users and groups public keys, to enable the sharing of data privately 
+- Keeps track of each user's and group's private data and related metadata
+- Keeps track of document shares and related metadata
 
 The services provided by this server are called via hasura actions and as such are exposed through the hasura graphql endpoint, some of the most important services are:
 
@@ -37,120 +38,46 @@ mutation login($address: String!, $signature: String!){
     user{
       address
       id
-      public_key
-      security_data
+      publicKey
+      privateKey
     }
   }
 }
 ```
 
-**Upsert Owned Data**
+**Find full actor data**
 
-Inserts or updates an owned data record
+Retrieves data for the specified actor, including their private details
 ```
-mutation upsert_owned_data($id: Int, $name: String!, $description: String!, $cid: String!, $type: String!, $iv: String!, $mac: String! ){
-  upsert_owned_data(req:{
-    id: $id,
-    name: $name,
-    description: $description,
-    cid: $cid,
-    type: $type,
-    iv: $iv,
-    mac: $mac
-  }){
-    id
-    name
-    description
-    cid
-    type
-    iv
-    mac
-    started_at
-    ended_at
-    is_deleted
-  }
-}
-```
-
-**Update Owned Data Metadata**
-
-Updates the metadata related to an owned data record
-```
-mutation update_owned_data_metadata($id: Int!, $name: String!, $description: String!){
-  update_owned_data_metadata(req:{
-    id: $id,
-    name:$name,
-    description: $description
-  }){
-    affected_rows
-  }
-}
-```
-
-
-**Soft Delete Owned Data**
-
-Soft deletes an owned data record
-```
-mutation soft_delete_owned_data($id: Int!){
-  soft_delete_owned_data(req:{
-    id: $id
-  }){
-    affected_rows
-  }
-}
-```
-
-**Share**
-
-Inserts a shared data record
-```
-mutation share($toUserId: uuid!, $originalOwnedDataId: Int!, $cid: String!, $iv: String!, $mac: String! ){
-  share(req:{
-    to_user_id: $toUserId,
-    original_owned_data_id:$originalOwnedDataId,
-    cid: $cid,
-    iv: $iv,
-    mac: $mac
-  }){
-    id
-    from_user{
+query find_full_actors($actorIds: [uuid!]!) {
+    find_full_actors(req: {
+      actorIds: $actorIds
+    }){
       id
       address
+      name
+      publicKey
+      privateKey
     }
-    to_user{
-      id
-      address
-    }
-    name
-    description
-    cid
-    shared_at
-    original_owned_data{
-      id
-      type
-    }
-    iv
-    mac
   }
-}
 ```
 
-**Update Shared Data Metadata**
+**Create Group**
 
-Updates the metadata related to an shared data record
+Creates a group
 ```
-mutation update_shared_data_metadata($id: Int!, $name: String!, $description: String!){
-  update_shared_data_metadata(req:{
-    id: $id,
-    name:$name,
-    description: $description
-  }){
-    affected_rows
+mutation create_group($name: String!, $publicKey: String!, $securityData: String!) {
+    create_group(req: 
+      {
+        name: $name,
+        public_key: $publicKey,
+        security_data: $securityData
+      }
+    ){
+      id
+    }
   }
-}
 ```
-
 
 
 To run the hashed private server locally using the hashed private action server image:

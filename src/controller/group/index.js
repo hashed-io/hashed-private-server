@@ -5,7 +5,7 @@ const {
 } = require('./schemas')
 
 /**
- * Provides the endpoints for user authentication
+ * Provides the endpoints for group management
  */
 module.exports = async function (fastify, opts) {
   fastify.register(async function (fastify) {

@@ -16,7 +16,7 @@ script_path="$(dirname $(realpath ${BASH_SOURCE[0]}))"
 pushd $script_path
 
 if [[ $1 = build ]]; then
-  docker-compose -p hashed-private-$1 down --remove-orphans
+  docker-compose -p hashed-private-$1 down --remove-orphans -v
 else
   docker-compose -p hashed-private-$1 down --remove-orphans -v
 fi

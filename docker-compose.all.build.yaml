@@ -4,6 +4,7 @@ services:
   graphql-engine:
     volumes:
       - ./hasura/metadata:/hasura-metadata
+      - ./hasura/migrations:/hasura-migrations
   action-server:
     build: 
       context: .
