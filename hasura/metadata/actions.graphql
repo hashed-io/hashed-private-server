@@ -22,36 +22,6 @@ type Mutation {
   ): LoginResponse
 }
 
-type Mutation {
-  share(
-    req: ShareRequest!
-  ): SharedData
-}
-
-type Mutation {
-  soft_delete_owned_data(
-    req: SoftDeleteOwnedDataRequest!
-  ): AffectedRowsResponse
-}
-
-type Mutation {
-  update_owned_data_metadata(
-    req: UpdateOwnedDataMetadataRequest!
-  ): AffectedRowsResponse
-}
-
-type Mutation {
-  update_shared_data_metadata(
-    req: UpdateSharedDataMetadataRequest!
-  ): AffectedRowsResponse
-}
-
-type Mutation {
-  upsert_owned_data(
-    req: UpsertOwnedDataRequest!
-  ): OwnedData
-}
-
 input GenerateLoginChallengeRequest {
   address: String!
 }

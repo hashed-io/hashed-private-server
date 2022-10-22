@@ -2,6 +2,4 @@
 - "!include public_document.yaml"
 - "!include public_group_user.yaml"
 - "!include public_login_challenge.yaml"
-- "!include public_owned_data.yaml"
 - "!include public_role.yaml"
-- "!include public_user.yaml"

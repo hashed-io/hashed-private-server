@@ -26,7 +26,6 @@ insert_permissions:
         - group_id
         - user_id
         - role_id
-      backend_only: false
 select_permissions:
   - role: user
     permission:
@@ -62,6 +61,7 @@ update_permissions:
 delete_permissions:
   - role: user
     permission:
+      backend_only: false
       filter:
         group:
           users:

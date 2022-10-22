@@ -28,7 +28,6 @@ insert_permissions:
         - name
         - owner_actor_id
         - to_actor_id
-      backend_only: false
 select_permissions:
   - role: user
     permission:
@@ -87,6 +86,7 @@ update_permissions:
 delete_permissions:
   - role: user
     permission:
+      backend_only: false
       filter:
         _or:
           - _and:
