@@ -6,9 +6,7 @@ const {
   Actor,
   Group,
   Login,
-  OwnedData,
-  User,
-  SharedData
+  User
 } = require('./model')
 const {
   GQL,
@@ -42,13 +40,6 @@ async function decorateFastifyInstance (fastify) {
   const user = new User({
     gql
   })
-  const ownedData = new OwnedData({
-    gql
-  })
-  const sharedData = new SharedData({
-    gql,
-    ownedData
-  })
   const login = new Login({
     gql,
     jwt,
@@ -59,8 +50,6 @@ async function decorateFastifyInstance (fastify) {
   fastify.decorate('group', group)
   fastify.decorate('login', login)
   fastify.decorate('user', user)
-  fastify.decorate('ownedData', ownedData)
-  fastify.decorate('sharedData', sharedData)
   fastify.decorate('jwt', jwt)
 
   fastify.decorateRequest('hydrateWithUserId', function (obj = 'body', propName = 'userId') {
@@ -95,8 +84,6 @@ async function main () {
     .register(require('./controller/group'), { prefix: '/api/group' })
     .register(require('./controller/login'), { prefix: '/api/login' })
     .register(require('./controller/jwk'), { prefix: '/api/jwk' })
-    .register(require('./controller/owned-data'), { prefix: '/api/owned-data' })
-    .register(require('./controller/shared-data'), { prefix: '/api/shared-data' })
     .setErrorHandler(function (error, request, reply) {
       server.log.info(error)
       reply.send(error)
