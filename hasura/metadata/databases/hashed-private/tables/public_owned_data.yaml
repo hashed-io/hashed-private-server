@@ -1,38 +1,3 @@
 table:
   schema: public
   name: owned_data
-object_relationships:
-  - name: owner_user
-    using:
-      foreign_key_constraint_on: owner_user_id
-array_relationships:
-  - name: shared_data
-    using:
-      foreign_key_constraint_on:
-        column: original_owned_data_id
-        table:
-          schema: public
-          name: shared_data
-select_permissions:
-  - role: user
-    permission:
-      columns:
-        - cid
-        - description
-        - ended_at
-        - id
-        - is_deleted
-        - iv
-        - mac
-        - name
-        - original_cid
-        - owner_user_id
-        - started_at
-        - type
-      filter:
-        _or:
-          - owner_user_id:
-              _eq: X-Hasura-User-Id
-          - shared_data:
-              to_user_id:
-                _eq: X-Hasura-User-Id
