@@ -55,6 +55,7 @@ actions:
     definition:
       kind: synchronous
       handler: '{{EXTERNAL_API_ENDPOINT}}/api/login/login'
+      forward_client_headers: true
       request_transform:
         body:
           action: transform
@@ -69,6 +70,15 @@ actions:
       - role: unauthenticated
       - role: user
     comment: Logs the user into the system
+  - name: refresh_token
+    definition:
+      kind: ""
+      handler: '{{EXTERNAL_API_ENDPOINT}}/api/login/refresh'
+      forward_client_headers: true
+    permissions:
+      - role: unauthenticated
+      - role: user
+    comment: Refresh token
 custom_types:
   enums: []
   input_objects:
@@ -92,4 +102,5 @@ custom_types:
     - name: CreateGroupResponse
     - name: PrivateInfo
     - name: FullActor
+    - name: RefreshTokenResponse
   scalars: []

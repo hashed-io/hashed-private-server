@@ -7,7 +7,7 @@
     "build": "cd ../client && yarn install && quasar build",
     "build-client-dev": "cd ../client && cp .env-local-server-dev .env && yarn install && quasar build -d && cp .env-dev .env",
     "build-client-uat": "cd ../client && cp .env-local-server-uat .env && yarn install && quasar build -d && cp .env-dev .env",
-    "start:dev": "eval \"$(./set-env-dev.sh)\" npx nodemon src/index.js",
+    "start:dev": "eval \"$(./set-env-dev.sh)\" npx nodemon --trace-warnings src/index.js ",
     "start:uat": "eval \"$(./set-env-uat.sh)\" npx nodemon src/index.js",
     "build-client:start:dev": "npm run build-client-dev && npm run start:dev",
     "build-client:start:uat": "npm run build-client-uat && npm run start:uat",
@@ -20,24 +20,24 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@fastify/cors": "^7.0.0",
-    "@fastify/swagger": "^6.0.1",
+    "@fastify/cookie": "^8.3.0",
+    "@fastify/cors": "^8.1.1",
+    "@fastify/swagger": "^8.1.0",
     "@polkadot/util": "^9.3.1",
     "@polkadot/util-crypto": "^9.7.2",
     "axios": "^0.27.2",
     "binary-uuid": "^2.0.3",
     "config": "^3.3.7",
     "date-diff": "^1.0.2",
-    "fastify": "^3.29.0",
+    "fastify": "^4.9.2",
     "fastify-auth0-verify": "^0.7.4",
-    "fastify-plugin": "^3.0.1",
+    "fastify-plugin": "^4.3.0",
     "graphql": "^16.5.0",
     "graphql-request": "^4.3.0",
     "hjson": "^3.2.2",
     "http-errors": "^2.0.0",
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
-    "pino-pretty": "^7.6.1",
     "url-join": "^5.0.0",
     "uuid": "^8.3.2"
   },
@@ -51,6 +51,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "hasura-cli": "^2.7.0",
     "jest": "^28.1.0",
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.16",
+    "pino-pretty": "^9.1.1"
   }
 }

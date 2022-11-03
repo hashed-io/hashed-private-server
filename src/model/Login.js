@@ -72,12 +72,15 @@ class Login {
    * @param {string} signature the signed challenge
    * @return {Object} with the following structure
    * {
-   *  "token": "jwt token",
-   *  "user": {
-   *    "id": "user id",
-   *    "address": "user address"
-   *    "public_key": "public key",
-   *    "security_data": "private key"
+   * "refreshToken": "jwt refresh token",
+   *  "payload" :{
+   *   "token": "jwt token",
+   *   "user": {
+   *     "id": "user id",
+   *     "address": "user address"
+   *     "public_key": "public key",
+   *     "security_data": "private key"
+   *   }
    *  }
    * }
    * @throws Unauthorized when there is no current challenge for the address or
@@ -102,10 +105,36 @@ class Login {
     await this.user.insertIfNotExists(address)
     const user = await this.user.findByAddress(address)
     return {
-      refresh_token: 'refreshToken',
-      token: await this._getJWTToken(user),
-      user
+      refreshToken: await this._getJWTRefreshToken(user),
+      payload: {
+        token: await this._getJWTToken(user),
+        user
+      }
     }
+  }
+
+  /**
+   * @desc Verifies the refresh token, and if valid generates a new JWT token
+   *
+   * @param {string} refreshToken
+   *
+   * @return {Object} with the following structure
+   * {
+   *  "token": "jwt token",
+   *  }
+   * @throws Unauthorized if refresh token is no longer valid
+   *
+   */
+  async refresh (refreshToken) {
+    const { address } = this.jwt.verifyToken(refreshToken)
+    const user = await this.user.findByAddress(address)
+    return {
+      token: await this._getJWTToken(user)
+    }
+  }
+
+  refreshTokenTTLSeconds () {
+    return this.opts.refreshTokenExpirationTimeMins * 60
   }
 
   async _deleteChallenge (address) {
@@ -130,6 +159,9 @@ class Login {
   }
 
   async _getJWTToken ({ id, address }) {
+    const {
+      tokenExpirationTimeMins
+    } = this.opts
     const tokenContent = {
       'https://hasura.io/jwt/claims': {
         'x-hasura-allowed-roles': [Role.USER],
@@ -137,10 +169,27 @@ class Login {
         'x-hasura-user-address': address,
         'x-hasura-user-id': id
       },
+      ...this._getJWTBaseTokenContent(id)
+    }
+    return this.jwt.getJWTToken(tokenContent, tokenExpirationTimeMins)
+  }
+
+  async _getJWTRefreshToken ({ id, address }) {
+    const {
+      refreshTokenExpirationTimeMins
+    } = this.opts
+    const tokenContent = {
+      ...this._getJWTBaseTokenContent(id),
+      address
+    }
+    return this.jwt.getJWTToken(tokenContent, refreshTokenExpirationTimeMins)
+  }
+
+  async _getJWTBaseTokenContent (id) {
+    return {
       iat: Math.floor(Date.now() / 1000),
       sub: id
     }
-    return this.jwt.getJWTToken(tokenContent)
   }
 }
 

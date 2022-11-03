@@ -2,7 +2,8 @@
 
 const {
   generateChallengeSchema,
-  loginSchema
+  loginSchema,
+  refreshSchema
 } = require('./schemas')
 
 /**
@@ -18,6 +19,7 @@ module.exports = async function (fastify, opts) {
      * Verifies the signed challenge, and on success produces a JWT token
      */
     fastify.post('/login', { schema: loginSchema }, loginHandler)
+    fastify.post('/refresh', { schema: refreshSchema }, refreshHandler)
   })
 }
 
@@ -34,5 +36,23 @@ async function generateChallengeHandler (req, reply) {
 }
 
 async function loginHandler (req, reply) {
-  return this.login.login(req.body)
+  const {
+    refreshToken,
+    payload
+  } = await this.login.login(req.body)
+  reply.setCookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    sameSite: 'None',
+    secure: true,
+    maxAge: this.login.refreshTokenTTLSeconds()
+  })
+  return payload
+}
+
+async function refreshHandler (req, reply) {
+  console.log('refreshToken: ', JSON.stringify(req.cookies, null, 4))
+  const {
+    refreshToken
+  } = req.cookies
+  return this.login.refresh(refreshToken)
 }

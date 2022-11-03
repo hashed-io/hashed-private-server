@@ -43,4 +43,4 @@ function verifyJWT (instance, options, done) {
   }
 }
 
-module.exports = fastifyPlugin(verifyJWT, { name: 'verify-jwt', fastify: '3.x' })
+module.exports = fastifyPlugin(verifyJWT, { name: 'verify-jwt', fastify: '4.x' })

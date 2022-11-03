@@ -6,12 +6,13 @@
   "login": {
     "challenge": {
       "timeToLiveMinutes": 5
-    }
+    },
+    "tokenExpirationTimeMins": 60,
+    "refreshTokenExpirationTimeMins": 1440
   },
   "jwt": {
     "keysPath": "/home/sebastian/vsc-workspace/hashed-private-server/jwt-keys/test",
-    "passphrase": "test passphrase",
-    "tokenExpirationTimeMins": 60
+    "passphrase": "test passphrase"
   },
   "swagger": {
     "routePrefix": "/documentation",

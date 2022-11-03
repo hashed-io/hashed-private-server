@@ -1,3 +1,4 @@
+const { Unauthorized } = require('http-errors')
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const path = require('path')
@@ -66,16 +67,16 @@ class JWT {
     return cert
   }
 
-  async getJWTToken (tokenContent) {
+  async getJWTToken (tokenContent, tokenExpirationTimeMins) {
     this.assertHasBeenInit()
     const {
-      passphrase,
-      tokenExpirationTimeMins
+      passphrase
     } = this.opts
     const {
       kid,
       key
     } = this.getRandomPrivateKey()
+    console.log('tokenContent: ', tokenContent, 'time', tokenExpirationTimeMins)
     return jwt.sign(
       tokenContent,
       { key, passphrase },
@@ -84,9 +85,13 @@ class JWT {
   }
 
   verifyToken (token) {
+    const decoded = jwt.decode(token, { complete: true })
+    if (!decoded) {
+      throw new Unauthorized('Unable to decode JWT token')
+    }
     const { header: { kid } } = jwt.decode(token, { complete: true })
     if (!kid) {
-      throw new Error('kid not found in JWT header')
+      throw new Unauthorized('kid not found in JWT header')
     }
     return jwt.verify(token, this.getPublicKeyCert(kid))
   }

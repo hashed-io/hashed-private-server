@@ -67,10 +67,27 @@ async function main () {
     PORT // has to come from env vars because its set by app services
   } = process.env
   // Create the instance
-  const server = fastify({ logger: { prettyPrint: NODE_ENV !== 'production' }, pluginTimeout: 20000 })
+  const envToLogger = {
+    dev: {
+      transport: {
+        target: 'pino-pretty',
+        options: {
+          translateTime: 'HH:MM:ss Z',
+          ignore: 'pid,hostname'
+        }
+      }
+    },
+    production: true,
+    test: false
+  }
+  const server = fastify({ logger: envToLogger[NODE_ENV] ?? true, pluginTimeout: 20000 })
   // Add application assets and manifest.json serving
   server.log.info(`cwd: ${process.cwd()}`)
   server.register(require('@fastify/swagger'), swagger)
+    .register(require('@fastify/cookie'), {
+      hook: 'onRequest',
+      parseOptions: {}
+    })
     .register(require('@fastify/cors'), {
       origin: true,
       credentials: true,
@@ -91,7 +108,10 @@ async function main () {
   await server.ready()
   server.swagger()
   // Run the server!
-  await server.listen(PORT || 3000, '0.0.0.0')
+  await server.listen({
+    port: PORT || 3000,
+    host: '0.0.0.0'
+  })
   return server
 }
 

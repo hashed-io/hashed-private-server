@@ -35,9 +35,8 @@ const loginSchema = {
   response: {
     200: {
       type: 'object',
-      required: ['refresh_token', 'token', 'user'],
+      required: ['token', 'user'],
       properties: {
-        refresh_token: { type: 'string' },
         token: { type: 'string' },
         user: {
           type: 'object',
@@ -54,7 +53,21 @@ const loginSchema = {
   }
 }
 
+const refreshSchema = {
+  tags,
+  response: {
+    200: {
+      type: 'object',
+      required: ['token'],
+      properties: {
+        token: { type: 'string' }
+      }
+    }
+  }
+}
+
 module.exports = {
   generateChallengeSchema,
-  loginSchema
+  loginSchema,
+  refreshSchema
 }
