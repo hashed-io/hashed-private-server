@@ -7,8 +7,8 @@
     "challenge": {
       "timeToLiveMinutes": 5
     },
-    "tokenExpirationTimeMins": 60,
-    "refreshTokenExpirationTimeMins": 1440
+    "tokenExpirationTimeMins": 1,
+    "refreshTokenExpirationTimeMins": 4
   },
   "jwt": {
     "keysPath": "/home/sebastian/vsc-workspace/hashed-private-server/jwt-keys/test",

@@ -126,6 +126,7 @@ class Login {
    *
    */
   async refresh (refreshToken) {
+    console.log('refreshToken: ', refreshToken)
     const { address } = this.jwt.verifyToken(refreshToken)
     const user = await this.user.findByAddress(address)
     return {

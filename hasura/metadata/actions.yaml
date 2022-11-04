@@ -72,7 +72,7 @@ actions:
     comment: Logs the user into the system
   - name: refresh_token
     definition:
-      kind: ""
+      kind: synchronous
       handler: '{{EXTERNAL_API_ENDPOINT}}/api/login/refresh'
       forward_client_headers: true
     permissions:
