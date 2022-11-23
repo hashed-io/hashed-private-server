@@ -1,5 +1,19 @@
 # Hashed Private Server
 
+- [Hashed Private Server](#hashed-private-server)
+  - [Description](#description)
+  - [Requirements](#requirements)
+  - [Services](#services)
+    - [Generate login challenge](#generate-login-challenge)
+    - [Login](#login)
+    - [Find full actor data](#find-full-actor-data)
+    - [Create Group](#create-group)
+  - [Run Server](#run-server)
+  - [Stop Server](#stop-server)
+  - [Testing](#testing)
+
+## Description
+
 Provides the backend services for Hashed Private solution:
 
 - Enables the user to authenticate with the service by signing a challenge message with the private key related to their on chain account
@@ -11,7 +25,13 @@ Provides the backend services for Hashed Private solution:
 
 The services provided by this server are called via hasura actions and as such are exposed through the hasura graphql endpoint, some of the most important services are:
 
-**Generate login challenge**
+## Requirements
+
+NodeJS 16 is required
+
+## Services
+
+### Generate login challenge
 
 Generates a new challenge for the user trying to authenticate to sign
 ```
@@ -24,7 +44,7 @@ mutation generate_login_challenge($address: String!){
 }
 ```
 
-**Login**
+### Login
 
 Verifies the signed challenge and on success produces a JWT token
 ```
@@ -45,7 +65,7 @@ mutation login($address: String!, $signature: String!){
 }
 ```
 
-**Find full actor data**
+### Find full actor data
 
 Retrieves data for the specified actor, including their private details
 ```
@@ -62,7 +82,7 @@ query find_full_actors($actorIds: [uuid!]!) {
   }
 ```
 
-**Create Group**
+### Create Group
 
 Creates a group
 ```
@@ -79,6 +99,7 @@ mutation create_group($name: String!, $publicKey: String!, $securityData: String
   }
 ```
 
+## Run Server
 
 To run the hashed private server locally using the hashed private action server image:
 
@@ -92,6 +113,8 @@ The hashed private server services will be available at the following url:
 
 `http://localhost:8080/v1/graphql`
 
+## Stop Server
+
 To stop and destroy the docker infrastructure created by the previous commands use for image:
 
 `npm run down:all image`
@@ -99,6 +122,8 @@ To stop and destroy the docker infrastructure created by the previous commands u
 For build:
 
 `npm run down:all build`
+
+## Testing
 
 For testing, first start the services using the start:all command and then run:
 
