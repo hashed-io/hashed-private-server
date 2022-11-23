@@ -40,12 +40,12 @@ function assertUser (expectedAddress, user) {
   const {
     id,
     address,
-    public_key,
-    security_data
+    publicKey,
+    privateKey
 
   } = user
   expect(address).toBe(expectedAddress)
   expect(id).not.toBeNull()
-  expect(public_key).toBeNull()
-  expect(security_data).toBeNull()
+  expect(publicKey).toBeNull()
+  expect(privateKey).toBeNull()
 }

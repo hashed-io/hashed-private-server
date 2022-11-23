@@ -92,3 +92,18 @@ The hashed private server services will be available at the following url:
 
 `http://localhost:8080/v1/graphql`
 
+To stop and destroy the docker infrastructure created by the previous commands use for image:
+
+`npm run down:all image`
+
+For build:
+
+`npm run down:all build`
+
+For testing, first start the services using the start:all command and then run:
+
+`npm test`
+
+
+
+
