@@ -4,6 +4,7 @@
     "secret": "GQL_SECRET"
   },
   "jwt": {
-    "keysPath": "JWT_KEYS_PATH"
+    "keysPath": "JWT_KEYS_PATH",
+    "passphrase": "JWT_KEYS_PASSPHRASE"
   }
 }
