@@ -3,6 +3,11 @@
 - [Hashed Private Server](#hashed-private-server)
   - [Description](#description)
   - [Requirements](#requirements)
+  - [Tables](#tables)
+    - [actor](#actor)
+    - [document](#document)
+    - [group\_user](#group_user)
+    - [role](#role)
   - [Services](#services)
     - [Generate login challenge](#generate-login-challenge)
     - [Login](#login)
@@ -28,6 +33,54 @@ The services provided by this server are called via hasura actions and as such a
 ## Requirements
 
 NodeJS 16 is required
+
+## Tables
+
+### actor
+
+Stores user and group information.
+
+Columns
+
+- id
+- name
+- address
+- public_key
+- security_data
+
+### document
+
+Stores metadata related to private(encrypted) documents
+
+Columns
+
+- id
+- owner_actor_id
+- name
+- description
+- to_actor_id
+- created_at
+- updated_at
+
+### group_user
+
+Stores the relationship between users and groups
+
+Columns
+
+- group_id
+- user_id
+- role_id
+
+### role
+
+Catalog of roles a user can have within a group
+
+Columns
+
+- id
+- role
+
 
 ## Services
 
